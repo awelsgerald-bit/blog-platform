@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Home — BlogX{% endblock %}
+{% block content %}
+<div class="feed-header">
+    <h1>Home</h1>
+</div>
+
+{% if current_user.is_authenticated %}
+<div class="compose">
+    <div class="avatar">{{ current_user.username[0].upper() }}</div>
+    <div class="compose-input">
+        <form method="GET" action="/post/new">
+            <textarea placeholder="What's on your mind?" onclick="window.location='/post/new'" readonly></textarea>
+            <div class="compose-actions">
+                <a href="/post/new" class="compose-btn">Post</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+{% if categories %}
+<div style="padding:12px 20px; border-bottom:1px solid var(--border); display:flex; gap:8px; flex-wrap:wrap;">
+    {% for cat in categories %}
+    <a href="/category/{{ cat.slug }}" class="tag">#{{ cat.name }}</a>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if posts %}
+    {% for post in posts %}
+    <div class="post-item">
+        <div class="avatar avatar-sm">{{ post.author.username[0].upper() }}</div>
+        <div class="post-content">
+            <div class="post-header">
+                <span class="post-author">{{ post.author.username }}</span>
+                <span class="post-handle">@{{ post.author.username.lower() }}</span>
+                <span class="post-time">· {{ post.published_at.strftime('%b %d') if post.published_at }}</span>
+            </div>
+            <a href="/post/{{ post.slug }}" class="post-title">{{ post.title }}</a>
+            <p class="post-text">{{ post.content[:180] }}{% if post.content|length > 180 %}...{% endif %}</p>
+            <div style="margin-bottom:8px;">
+                {% for cat in post.categories %}<a href="/category/{{ cat.slug }}" class="tag">#{{ cat.name }}</a>{% endfor %}
+            </div>
+            <div class="post-actions">
+                <a href="/post/{{ post.slug }}" class="action-btn">
+                    <span class="action-icon">💬</span> {{ post.comments|length }}
+                </a>
+                <a href="/post/{{ post.id }}/like" class="action-btn">
+                    <span class="action-icon">❤️</span> {{ post.likes|length }}
+                </a>
+                {% if current_user.is_authenticated and current_user.id == post.user_id %}
+                <a href="/post/{{ post.id }}/edit" class="action-btn">
+                    <span class="action-icon">✏️</span>
+                </a>
+                <a href="/post/{{ post.id }}/delete" class="action-btn" onclick="return confirm('Delete?')">
+                    <span class="action-icon">🗑️</span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+<div style="padding:60px 20px; text-align:center; color:var(--text-muted);">
+    <div style="font-size:3rem; margin-bottom:16px;">📝</div>
+    <p style="font-size:1.1rem; font-weight:700;">No posts yet</p>
+    <p style="font-size:0.9rem; margin-top:6px;">Be the first to share something!</p>
+</div>
+{% endif %}
+{% endblock %}
