@@ -1,21 +1,45 @@
 {% extends 'base.html' %}
-{% block title %}#{{ category.name }}{% endblock %}
+{% block title %}#{{ category.name }} — The Chronicle{% endblock %}
 {% block content %}
-<div class="feed-header">
-    <h1>#{{ category.name }}</h1>
-    <p>{{ posts|length }} posts</p>
+<div class="feed-header" style="display:flex; align-items:center; gap:16px;">
+  <a href="/" style="color:var(--text); text-decoration:none; font-size:1.3rem; line-height:1;">←</a>
+  <div>
+    <div class="feed-title">#{{ category.name }}</div>
+    <div style="font-size:0.78rem; color:var(--text-muted);">{{ posts|length }} posts</div>
+  </div>
 </div>
-{% for post in posts %}
-<div class="post-item">
-    <div class="avatar avatar-sm">{{ post.author.username[0].upper() }}</div>
-    <div class="post-content">
-        <div class="post-header">
-            <span class="post-author">{{ post.author.username }}</span>
-            <span class="post-handle">@{{ post.author.username.lower() }}</span>
-        </div>
-        <a href="/post/{{ post.slug }}" class="post-title">{{ post.title }}</a>
-        <p class="post-text">{{ post.content[:180] }}...</p>
+
+{% if posts %}
+  {% for post in posts %}
+  <div class="post-item">
+    <div class="avatar avatar-sm">
+      {% if post.author.avatar %}<img src="/static/{{ post.author.avatar }}">{% else %}{{ post.author.username[0].upper() }}{% endif %}
     </div>
+    <div class="post-body">
+      <div class="post-header">
+        <span class="post-name">{{ post.author.username }}</span>
+        <span class="post-handle-text">@{{ post.author.username.lower() }}</span>
+        <span class="post-dot">·</span>
+        <span class="post-handle-text">{{ post.published_at.strftime('%b %d') if post.published_at }}</span>
+      </div>
+      <a href="/post/{{ post.slug }}" class="post-title-link">{{ post.title }}</a>
+      {% if post.image %}
+      <img src="/static/{{ post.image }}" class="post-img">
+      {% endif %}
+      <p class="post-preview">{{ post.content[:160] }}...</p>
+      <div class="post-actions">
+        <span class="action-btn">👁️ {{ post.views or 0 }}</span>
+        <a href="/post/{{ post.slug }}" class="action-btn">💬 {{ post.comments|length }}</a>
+        <a href="/post/{{ post.id }}/like" class="action-btn">❤️ {{ post.likes|length }}</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+{% else %}
+<div style="padding:60px 20px; text-align:center; color:var(--text-muted);">
+  <div style="font-size:3rem; margin-bottom:16px;">🏷️</div>
+  <div style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:700; font-style:italic;">No posts yet</div>
+  <p style="font-size:0.9rem; margin-top:8px;">Be the first to post in this category!</p>
 </div>
-{% endfor %}
+{% endif %}
 {% endblock %}

@@ -1,41 +1,51 @@
 {% extends 'base.html' %}
-{% block title %}New Post{% endblock %}
+{% block title %}Write a Post — The Chronicle{% endblock %}
 {% block content %}
 <div class="feed-header" style="display:flex; align-items:center; gap:16px;">
-    <a href="/" style="color:var(--text); text-decoration:none; font-size:1.2rem;">←</a>
-    <h1>New Post</h1>
+  <a href="/" style="color:var(--text); text-decoration:none; font-size:1.3rem; line-height:1;">←</a>
+  <div class="feed-title">Write a Post</div>
 </div>
-<div style="padding:20px;">
-    <form method="POST">
-        <div class="form-group">
-            <label>Title</label>
-            <input type="text" name="title" placeholder="Give your post a title..." required>
-        </div>
-        <div class="form-group">
-            <label>Content</label>
-            <textarea name="content" placeholder="What's on your mind?" required></textarea>
-        </div>
-        <div class="form-group">
-            <label>Categories (hold Ctrl to select multiple)</label>
-            <select name="categories" multiple>
-                {% for cat in categories %}
-                <option value="{{ cat.id }}">{{ cat.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Status</label>
-            <select name="status">
-                <option value="draft">💾 Save as Draft</option>
-                <option value="published">🚀 Publish Now</option>
-                <option value="scheduled">⏰ Schedule</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Schedule Date (if scheduled)</label>
-            <input type="datetime-local" name="scheduled_at">
-        </div>
-        <button type="submit" class="btn-full">Post</button>
-    </form>
+
+<div style="padding:24px 20px;">
+  <form method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" name="title" placeholder="Give your post a compelling title..." required>
+    </div>
+    <div class="form-group">
+      <label>Content</label>
+      <textarea name="content" placeholder="Share your story with the world..." required style="min-height:240px;"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Cover Image (optional)</label>
+      <input type="file" name="image" accept="image/*" style="padding:10px;">
+    </div>
+    <div class="form-group">
+      <label>Categories (hold Ctrl to select multiple)</label>
+      <select name="categories" multiple>
+        {% for cat in categories %}
+        <option value="{{ cat.id }}">{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status" style="min-height:auto;">
+          <option value="draft">💾 Save as Draft</option>
+          <option value="published">🚀 Publish Now</option>
+          <option value="scheduled">⏰ Schedule</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Schedule Date (if scheduled)</label>
+        <input type="datetime-local" name="scheduled_at" style="min-height:auto;">
+      </div>
+    </div>
+    <div style="display:flex; gap:12px; margin-top:8px;">
+      <button type="submit" class="btn btn-solid" style="padding:13px 32px; font-size:0.95rem;">Publish Post</button>
+      <a href="/" class="btn" style="padding:13px 32px; font-size:0.95rem;">Cancel</a>
+    </div>
+  </form>
 </div>
 {% endblock %}

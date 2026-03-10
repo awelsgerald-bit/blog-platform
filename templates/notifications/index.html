@@ -1,23 +1,29 @@
 {% extends 'base.html' %}
-{% block title %}Notifications — BlogX{% endblock %}
+{% block title %}Notifications — The Chronicle{% endblock %}
 {% block content %}
 <div class="feed-header">
-    <h1>Notifications</h1>
+  <div class="feed-title">Notifications</div>
+  <div style="font-size:0.78rem; color:var(--text-muted);">{{ notifications|length }} total</div>
 </div>
+
 {% if notifications %}
-    {% for notif in notifications %}
-    <div class="notif-item {% if not notif.is_read %}unread{% endif %}">
-        <div style="font-size:1.4rem;">🔔</div>
-        <div>
-            <div class="notif-text">{{ notif.message }}</div>
-            <div class="notif-time">{{ notif.created_at.strftime('%B %d, %Y · %I:%M %p') }}</div>
-        </div>
+  {% for notif in notifications %}
+  <div class="notif-item {% if not notif.is_read %}unread{% endif %}">
+    <div style="font-size:1.3rem;">🔔</div>
+    <div style="flex:1;">
+      <div class="notif-text">{{ notif.message }}</div>
+      <div class="notif-time">{{ notif.created_at.strftime('%B %d, %Y · %I:%M %p') }}</div>
     </div>
-    {% endfor %}
+    {% if not notif.is_read %}
+    <div style="width:8px; height:8px; border-radius:50%; background:var(--text); flex-shrink:0; margin-top:6px;"></div>
+    {% endif %}
+  </div>
+  {% endfor %}
 {% else %}
 <div style="padding:60px 20px; text-align:center; color:var(--text-muted);">
-    <div style="font-size:3rem; margin-bottom:16px;">🔔</div>
-    <p style="font-size:1.1rem; font-weight:700;">No notifications yet</p>
+  <div style="font-size:3rem; margin-bottom:16px;">🔔</div>
+  <div style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:700; font-style:italic;">All caught up!</div>
+  <p style="font-size:0.9rem; margin-top:8px;">No notifications yet.</p>
 </div>
 {% endif %}
 {% endblock %}

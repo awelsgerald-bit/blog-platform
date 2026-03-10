@@ -1,22 +1,22 @@
 {% extends 'base.html' %}
-{% block title %}Login — BlogX{% endblock %}
+{% block title %}Sign In — The Chronicle{% endblock %}
 {% block content %}
 <div class="form-page">
-    <div class="form-card">
-        <div class="form-title">Sign in to BlogX</div>
-        <p class="form-subtitle">Enter your credentials to continue</p>
-        <form method="POST">
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" name="username" placeholder="Enter your username" required>
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" name="password" placeholder="Enter your password" required>
-            </div>
-            <button type="submit" class="btn-full">Sign In</button>
-        </form>
-        <div class="form-link">Don't have an account? <a href="/signup">Sign up</a></div>
-    </div>
+  <div class="form-card">
+    <div class="form-title">Welcome back</div>
+    <p class="form-subtitle">Sign in to continue your journey</p>
+    <form method="POST">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" name="username" placeholder="Enter your username" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter your password" required>
+      </div>
+      <button type="submit" class="btn-full">Sign In</button>
+    </form>
+    <div class="form-link">Don't have an account? <a href="/signup">Join free</a></div>
+  </div>
 </div>
 {% endblock %}

@@ -1,65 +1,81 @@
 {% extends 'base.html' %}
-{% block title %}Admin — BlogX{% endblock %}
+{% block title %}Admin — The Chronicle{% endblock %}
 {% block content %}
 <div class="feed-header">
-    <h1>Admin Dashboard</h1>
+  <div class="feed-title">Admin Dashboard</div>
 </div>
+
 <div style="padding:20px;">
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:32px;">
-        <div style="background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px; text-align:center;">
-            <div style="font-size:2rem; font-weight:800; font-family:'Syne',sans-serif; color:var(--accent);">{{ posts|length }}</div>
-            <div style="color:var(--text-muted); font-size:0.85rem;">Posts</div>
-        </div>
-        <div style="background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px; text-align:center;">
-            <div style="font-size:2rem; font-weight:800; font-family:'Syne',sans-serif; color:var(--accent);">{{ users|length }}</div>
-            <div style="color:var(--text-muted); font-size:0.85rem;">Users</div>
-        </div>
-        <div style="background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px; text-align:center;">
-            <div style="font-size:2rem; font-weight:800; font-family:'Syne',sans-serif; color:var(--accent);">{{ comments|length }}</div>
-            <div style="color:var(--text-muted); font-size:0.85rem;">Comments</div>
-        </div>
+  <!-- Stats -->
+  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:28px;">
+    <div style="background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:20px; text-align:center;">
+      <div style="font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:700;">{{ posts|length }}</div>
+      <div style="font-size:0.78rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Posts</div>
     </div>
+    <div style="background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:20px; text-align:center;">
+      <div style="font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:700;">{{ users|length }}</div>
+      <div style="font-size:0.78rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Users</div>
+    </div>
+    <div style="background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:20px; text-align:center;">
+      <div style="font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:700;">{{ comments|length }}</div>
+      <div style="font-size:0.78rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Comments</div>
+    </div>
+  </div>
 
-    <h2 style="font-family:'Syne',sans-serif; font-weight:800; margin-bottom:16px;">Posts</h2>
-    <div style="background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden; margin-bottom:32px;">
-        <table class="admin-table">
-            <thead><tr>
-                <th>Title</th><th>Author</th><th>Status</th><th>Approved</th><th>Actions</th>
-            </tr></thead>
-            <tbody>
-            {% for post in posts %}
-            <tr>
-                <td>{{ post.title[:40] }}</td>
-                <td>@{{ post.author.username }}</td>
-                <td><span class="tag">{{ post.status }}</span></td>
-                <td>{{ '✅' if post.is_approved else '❌' }}</td>
-                <td>
-                    {% if post.is_approved %}
-                    <a href="/admin/post/{{ post.id }}/unapprove" class="btn-sm btn-danger">Unapprove</a>
-                    {% else %}
-                    <a href="/admin/post/{{ post.id }}/approve" class="btn-sm btn-approve">Approve</a>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+  <!-- Posts Table -->
+  <div style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:700; font-style:italic; margin-bottom:14px;">Posts</div>
+  <div style="background:var(--bg2); border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:28px;">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Status</th>
+          <th>Approved</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for post in posts %}
+        <tr>
+          <td>{{ post.title[:45] }}{% if post.title|length > 45 %}...{% endif %}</td>
+          <td>@{{ post.author.username }}</td>
+          <td><span class="tag">{{ post.status }}</span></td>
+          <td>{{ '✅' if post.is_approved else '❌' }}</td>
+          <td style="display:flex; gap:6px;">
+            {% if post.is_approved %}
+            <a href="/admin/post/{{ post.id }}/unapprove" class="btn-sm btn-sm-danger">Unapprove</a>
+            {% else %}
+            <a href="/admin/post/{{ post.id }}/approve" class="btn-sm">Approve</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
-    <h2 style="font-family:'Syne',sans-serif; font-weight:800; margin-bottom:16px;">Comments</h2>
-    <div style="background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden;">
-        <table class="admin-table">
-            <thead><tr><th>Author</th><th>Comment</th><th>Actions</th></tr></thead>
-            <tbody>
-            {% for comment in comments %}
-            <tr>
-                <td>@{{ comment.author.username }}</td>
-                <td>{{ comment.content[:80] }}</td>
-                <td><a href="/admin/comment/{{ comment.id }}/delete" class="btn-sm btn-danger">Delete</a></td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+  <!-- Comments Table -->
+  <div style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:700; font-style:italic; margin-bottom:14px;">Comments</div>
+  <div style="background:var(--bg2); border:1px solid var(--border); border-radius:14px; overflow:hidden;">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Author</th>
+          <th>Comment</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for comment in comments %}
+        <tr>
+          <td>@{{ comment.author.username }}</td>
+          <td>{{ comment.content[:80] }}{% if comment.content|length > 80 %}...{% endif %}</td>
+          <td><a href="/admin/comment/{{ comment.id }}/delete" class="btn-sm btn-sm-danger">Delete</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}
